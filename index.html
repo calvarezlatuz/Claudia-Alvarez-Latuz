@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Claudia Alvarez-Latuz — Applied Mathematics</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=DM+Mono:wght@300;400&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --paper: #f5f0e8;
+      --paper-dark: #ede7d5;
+      --accent: #2d5a27;
+      --accent-light: #4a8c42;
+      --accent-muted: #c8ddc6;
+      --rule: #b8a98a;
+      --muted: #6b6253;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: 'EB Garamond', Georgia, serif;
+      font-size: 18px;
+      line-height: 1.7;
+      min-height: 100vh;
+    }
+
+    /* Subtle grain overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 9999;
+    }
+
+    /* ── HEADER ── */
+    header {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      min-height: 420px;
+      padding: 3rem 7vw;
+      border-bottom: 1.5px solid var(--rule);
+      overflow: hidden;
+      opacity: 0;
+      animation: fadeUp 0.8s ease forwards;
+      background-image: url('photo.jpg');
+      background-size: cover;
+      background-position: center top;
+    }
+
+    /* dark gradient scrim so text stays readable */
+    header::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(20,18,14,0.15) 0%,
+        rgba(20,18,14,0.55) 55%,
+        rgba(20,18,14,0.82) 100%
+      );
+      pointer-events: none;
+    }
+
+    .header-text {
+      position: relative;
+      z-index: 1;
+    }
+
+    .header-text h1 {
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      margin-bottom: 0.4rem;
+      color: #f5f0e8;
+    }
+
+    .header-text .role {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 300;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: rgba(245,240,232,0.7);
+    }
+
+    .header-text .institution {
+      font-size: 1rem;
+      color: rgba(245,240,232,0.75);
+      font-style: italic;
+      margin-top: 0.2rem;
+    }
+
+    .header-text .contact-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem 1.5rem;
+      margin-top: 1.2rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: rgba(245,240,232,0.7);
+    }
+
+    .contact-links a {
+      color: #a8d4a4;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .contact-links a:hover { color: #c8e8c4; text-decoration: underline; }
+
+    /* ── NAV ── */
+    nav {
+      display: flex;
+      gap: 2.5rem;
+      padding: 1rem 7vw;
+      border-bottom: 1px solid var(--rule);
+      background: var(--paper);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      opacity: 0;
+      animation: fadeUp 0.8s 0.15s ease forwards;
+    }
+
+    nav a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      text-decoration: none;
+      transition: color 0.2s;
+      padding-bottom: 2px;
+      border-bottom: 1px solid transparent;
+    }
+    nav a:hover { color: var(--accent); border-bottom-color: var(--accent); }
+
+    /* ── MAIN LAYOUT ── */
+    main {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 0;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 7vw;
+    }
+
+    .main-col { padding: 3.5rem 3rem 3.5rem 0; border-right: 1px solid var(--rule); }
+    .side-col { padding: 3.5rem 0 3.5rem 2.5rem; }
+
+    /* ── SECTIONS ── */
+    section {
+      margin-bottom: 3.5rem;
+      opacity: 0;
+      animation: fadeUp 0.7s ease forwards;
+    }
+
+    section:nth-child(1) { animation-delay: 0.25s; }
+    section:nth-child(2) { animation-delay: 0.35s; }
+    section:nth-child(3) { animation-delay: 0.45s; }
+    section:nth-child(4) { animation-delay: 0.55s; }
+
+    h2 {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 400;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 1.2rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    /* ── RESEARCH PROFILE ── */
+    .profile-text {
+      font-size: 1.05rem;
+      color: var(--ink);
+      max-width: 62ch;
+    }
+
+    /* ── INTERESTS ── */
+    .interests-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    .tag {
+      background: var(--accent-muted);
+      color: var(--accent);
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      padding: 0.3rem 0.8rem;
+      border-radius: 2px;
+      letter-spacing: 0.04em;
+    }
+
+    /* ── PUBLICATIONS ── */
+    .pub-item {
+      padding: 1rem 0;
+      border-bottom: 1px dashed var(--rule);
+    }
+    .pub-item:last-child { border-bottom: none; }
+
+    .pub-title {
+      font-size: 1rem;
+      font-weight: 500;
+      margin-bottom: 0.2rem;
+    }
+
+    .pub-authors {
+      font-size: 0.9rem;
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .pub-venue {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--accent);
+      margin-top: 0.3rem;
+    }
+
+    .pub-links { margin-top: 0.4rem; display: flex; gap: 1rem; }
+    .pub-links a {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--accent);
+      text-decoration: none;
+      border-bottom: 1px solid var(--accent-muted);
+      padding-bottom: 1px;
+      transition: border-color 0.2s;
+    }
+    .pub-links a:hover { border-color: var(--accent); }
+
+    .pub-badge {
+      display: inline-block;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.15rem 0.5rem;
+      border: 1px solid var(--accent);
+      color: var(--accent);
+      border-radius: 2px;
+      margin-left: 0.5rem;
+      vertical-align: middle;
+    }
+    .pub-badge.preprint { border-color: var(--muted); color: var(--muted); }
+
+    /* ── EDUCATION ── */
+    .edu-item { padding: 0.8rem 0; border-bottom: 1px dashed var(--rule); }
+    .edu-item:last-child { border-bottom: none; }
+    .edu-degree { font-weight: 500; font-size: 1rem; }
+    .edu-place { font-style: italic; color: var(--muted); font-size: 0.95rem; }
+    .edu-date {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--muted);
+      margin-top: 0.15rem;
+    }
+
+    /* ── EXPERIENCE ── */
+    .exp-item { padding: 0.8rem 0; border-bottom: 1px dashed var(--rule); }
+    .exp-item:last-child { border-bottom: none; }
+    .exp-role { font-weight: 500; font-size: 1rem; }
+    .exp-place { font-style: italic; color: var(--muted); font-size: 0.9rem; }
+    .exp-date { font-family: 'DM Mono', monospace; font-size: 0.68rem; color: var(--muted); }
+    .exp-detail { font-size: 0.88rem; color: var(--muted); margin-top: 0.25rem; }
+
+    /* ── SIDE COLUMN ── */
+    .side-section {
+      margin-bottom: 2.5rem;
+      opacity: 0;
+      animation: fadeUp 0.7s 0.4s ease forwards;
+    }
+
+    .side-section h2 { font-size: 0.65rem; }
+
+    /* Skills */
+    .skill-group { margin-bottom: 0.8rem; }
+    .skill-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--muted);
+      margin-bottom: 0.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .skill-items {
+      font-size: 0.88rem;
+      color: var(--ink);
+    }
+
+    /* Languages */
+    .lang-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.35rem 0;
+      border-bottom: 1px dashed var(--rule);
+      font-size: 0.92rem;
+    }
+    .lang-item:last-child { border-bottom: none; }
+    .lang-level {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      color: var(--muted);
+    }
+
+    /* Talks */
+    .talk-item { padding: 0.6rem 0; border-bottom: 1px dashed var(--rule); font-size: 0.9rem; }
+    .talk-item:last-child { border-bottom: none; }
+    .talk-event { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted); margin-top: 0.1rem; }
+
+    /* GitHub link */
+    .github-card {
+      background: var(--paper-dark);
+      border: 1px solid var(--rule);
+      border-radius: 4px;
+      padding: 1rem 1.2rem;
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    .github-card a {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--accent);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+    }
+    .github-card a:hover { color: var(--accent-light); }
+    .github-icon { width: 18px; height: 18px; fill: currentColor; }
+
+    /* ── FOOTER ── */
+    footer {
+      border-top: 1.5px solid var(--rule);
+      padding: 2rem 7vw;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.68rem;
+      color: var(--muted);
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      header { min-height: 320px; }
+      main {
+        grid-template-columns: 1fr;
+        padding: 0 5vw;
+      }
+      .main-col { border-right: none; padding-right: 0; padding-bottom: 0; }
+      .side-col { padding-left: 0; border-top: 1px solid var(--rule); }
+      nav { gap: 1.5rem; flex-wrap: wrap; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="header-text">
+      <p class="role">PhD Candidate · Applied Mathematics</p>
+      <h1>Claudia<br>Alvarez-Latuz</h1>
+      <p class="institution">Laboratoire de Mathématiques d'Avignon (LMA) — INRAE BioSP</p>
+      <div class="contact-links">
+        <a href="/cdn-cgi/l/email-protection#6b08070a1e0f020a0a071d0a190e11070a1f1e112b0c060a020745080406"><span class="__cf_email__" data-cfemail="6b08070a1e0f020a0a071d0a190e11070a1f1e112b0c060a020745080406">[email&#160;protected]</span></a>
+        <a href="/cdn-cgi/l/email-protection#2a49464b5f4e434b044b465c4b584f5007464b5e5f506a4344584b4f044c58"><span class="__cf_email__" data-cfemail="f7949b9682939e96d9969b819685928dda9b9683828db79e99859692d99185">[email&#160;protected]</span></a>
+        <a href="https://github.com/YOUR_GITHUB_USERNAME" target="_blank">github.com/YOUR_GITHUB_USERNAME</a>
+      </div>
+    </div>
+  </header>
+
+  <nav>
+    <a href="#research">Research</a>
+    <a href="#publications">Publications</a>
+    <a href="#education">Education</a>
+    <a href="#experience">Experience</a>
+    <a href="#talks">Talks</a>
+  </nav>
+
+  <main>
+    <!-- ── LEFT COLUMN ── -->
+    <div class="main-col">
+
+      <section id="research">
+        <h2>Research Profile</h2>
+        <p class="profile-text">
+          PhD candidate in applied mathematics working at the interface of optimal control, stability theory, and mathematical biology. My research focuses on chemostat models with perturbations — including mutation and horizontal transfer — using ODE and PDE frameworks. I combine analytical stability methods with numerical optimization techniques, with applications to natural resource management and biological systems.
+        </p>
+
+        <div class="interests-grid" style="margin-top:1.2rem;">
+          <span class="tag">Optimal Control</span>
+          <span class="tag">Stability Analysis</span>
+          <span class="tag">ODE / PDE Models</span>
+          <span class="tag">Chemostat Systems</span>
+          <span class="tag">Structured Populations</span>
+          <span class="tag">Numerical Optimization</span>
+          <span class="tag">Natural Resource Management</span>
+          <span class="tag">Mathematical Biology</span>
+        </div>
+      </section>
+
+      <section id="publications">
+        <h2>Publications</h2>
+
+        <div class="pub-item">
+          <div class="pub-title">
+            Global stability of perturbed chemostat systems
+            <span class="pub-badge">Published</span>
+          </div>
+          <div class="pub-authors">Alvarez-Latuz, C., Bayen, T., Coville, J. (2025)</div>
+          <div class="pub-venue">Nonlinear Analysis: Real World Applications, 88, 104509</div>
+          <div class="pub-links">
+            <a href="https://doi.org/10.1016/j.nonrwa.2025.104509" target="_blank">DOI ↗</a>
+          </div>
+        </div>
+
+        <div class="pub-item">
+          <div class="pub-title">
+            Target controllability for a minimum time problem in a trait-structured chemostat model
+            <span class="pub-badge preprint">Submitted</span>
+          </div>
+          <div class="pub-authors">Submitted to Mathematical Models and Methods in Applied Sciences (M3AS), 2026</div>
+          <div class="pub-links">
+            <a href="https://hal.science/hal-05501561" target="_blank">HAL: 05501561 ↗</a>
+          </div>
+        </div>
+
+        <div class="pub-item">
+          <div class="pub-title">
+            Stability analysis and numerical optimization of a chemostat system with mutation and horizontal transfer
+            <span class="pub-badge preprint">Forthcoming</span>
+          </div>
+          <div class="pub-authors">European Control Conference (ECC) 2026</div>
+        </div>
+      </section>
+
+      <section id="education">
+        <h2>Education</h2>
+
+        <div class="edu-item">
+          <div class="edu-degree">PhD in Applied Mathematics</div>
+          <div class="edu-place">Université d'Avignon & INRAE, France</div>
+          <div class="edu-date">2023 — present</div>
+          <div style="font-size:0.88rem; color:var(--muted); margin-top:0.2rem;">
+            Thesis: <em>Stability and optimal control of perturbed chemostat systems</em><br>
+            Supervisors: Terence Bayen, Jérôme Coville
+          </div>
+        </div>
+
+        <div class="edu-item">
+          <div class="edu-degree">Master of Science in Mathematics</div>
+          <div class="edu-place">Universidad Federico Santa María, Chile</div>
+          <div class="edu-date">2021 — 2022</div>
+          <div style="font-size:0.88rem; color:var(--muted); margin-top:0.2rem;">
+            Thesis: <em>Set of sustainable thresholds under uncertainties</em><br>
+            Supervisors: Cristopher Hermosilla, Pedro Gajardo
+          </div>
+        </div>
+
+        <div class="edu-item">
+          <div class="edu-degree">Mathematical Engineering</div>
+          <div class="edu-place">Universidad Federico Santa María, Chile</div>
+          <div class="edu-date">2016 — 2022</div>
+        </div>
+      </section>
+
+      <section id="experience">
+        <h2>Research Experience</h2>
+
+        <div class="exp-item">
+          <div class="exp-role">Teaching Assistant</div>
+          <div class="exp-place">Université d'Avignon, France</div>
+          <div class="exp-date">2024 — 2026</div>
+          <div class="exp-detail">Statistics and Probability Theory</div>
+        </div>
+
+        <div class="exp-item">
+          <div class="exp-role">Research Engineer</div>
+          <div class="exp-place">INSA Rouen, France</div>
+          <div class="exp-date">Spring 2023</div>
+          <div class="exp-detail">Optimal control of stochastic PDEs; numerical methods for stochastic systems</div>
+        </div>
+
+        <div class="exp-item">
+          <div class="exp-role">Research Assistant</div>
+          <div class="exp-place">Universidad Técnica Federico Santa María, Chile</div>
+          <div class="exp-date">2020 — 2022</div>
+          <div class="exp-detail">Reinforcement learning for optimization; mathematical modeling for natural resource management; epidemiological simulations with age-structured contact restriction models</div>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ── RIGHT COLUMN ── -->
+    <div class="side-col">
+
+      <div class="github-card">
+        <a href="https://github.com/YOUR_GITHUB_USERNAME" target="_blank">
+          <svg class="github-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+          </svg>
+          github.com/YOUR_GITHUB_USERNAME
+        </a>
+      </div>
+
+      <div class="side-section">
+        <h2>Computational Skills</h2>
+        <div class="skill-group">
+          <div class="skill-label">Scientific Computing</div>
+          <div class="skill-items">Python, Julia, FreeFem++</div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-label">Mathematical Software</div>
+          <div class="skill-items">MATLAB, Mathematica</div>
+        </div>
+        <div class="skill-group">
+          <div class="skill-label">Programming</div>
+          <div class="skill-items">C, R</div>
+        </div>
+      </div>
+
+      <div class="side-section">
+        <h2>Languages</h2>
+        <div class="lang-item">
+          Spanish <span class="lang-level">Native</span>
+        </div>
+        <div class="lang-item">
+          English <span class="lang-level">Advanced</span>
+        </div>
+        <div class="lang-item">
+          French <span class="lang-level">Intermediate</span>
+        </div>
+      </div>
+
+      <div class="side-section" id="talks">
+        <h2>Talks & Conferences</h2>
+        <div class="talk-item">
+          Stability and Optimization of Perturbed Chemostat Systems
+          <div class="talk-event">PGMODAYS 2025 · EDF Lab, Paris-Saclay</div>
+        </div>
+        <div class="talk-item">
+          Global Stability of Perturbed Chemostat Systems
+          <div class="talk-event">Journées Franco-Chiliennes pour l'Optimisation 2025 · INSA Rouen</div>
+        </div>
+      </div>
+
+      <div class="side-section">
+        <h2>References</h2>
+        <div style="font-size:0.88rem; line-height:1.8;">
+          <strong>Terence Bayen</strong><br>
+          <a href="/cdn-cgi/l/email-protection#72061700171c11175c10130b171c32071c1b045f13041b151c1d1c5c1400" style="font-family:'DM Mono',monospace; font-size:0.68rem; color:var(--accent); text-decoration:none;"><span class="__cf_email__" data-cfemail="5f2b3a2d3a313c3a713d3e263a311f2a313629723e29363831303171392d">[email&#160;protected]</span></a><br>
+          <span style="font-size:0.8rem; color:var(--muted);">LMA, Avignon Université</span>
+        </div>
+        <div style="font-size:0.88rem; line-height:1.8; margin-top:0.8rem;">
+          <strong>Alain Rapaport</strong><br>
+          
